@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "routes": [
+    { "handle": "filesystem" },
+    { "src": "/go/(.*)", "dest": "/server.js" },
+    { "src": "/save", "dest": "/server.js" },
+    { "src": "/dashboard", "dest": "/server.js" },
+    { "src": "/data", "dest": "/server.js" },
+    { "src": "/", "dest": "/public/index.html" }
+  ]
+}
