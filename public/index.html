@@ -5,31 +5,46 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tracker Simples</title>
   <style>
-    body {
-      font-family: sans-serif;
-      margin: 2rem;
-    }
-    input, button {
-      padding: 0.5rem;
-      margin: 0.5rem 0;
-      width: 100%;
-      max-width: 400px;
-    }
-    #output {
-      margin-top: 2rem;
-      padding: 1rem;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      background: #f9f9f9;
-    }
-    pre {
-      white-space: pre-wrap;
-      word-wrap: break-word;
-    }
-  </style>
+  body {
+    font-family: sans-serif;
+    margin: 2rem;
+    background: #ffffff;
+    color: #000000;
+  }
+
+  input, button {
+    padding: 0.5rem;
+    margin: 0.5rem 0;
+    width: 100%;
+    max-width: 400px;
+  }
+
+  a {
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  #output {
+    margin-top: 2rem;
+    padding: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background: #f9f9f9;
+    color: #000;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+</style>
 </head>
 <body>
-  <h1>Gerador de Link Rastreador</h1>
+  <h1>Rastreador maicon.dev</h1>
   <input type="text" id="dest" placeholder="Insira a URL de destino">
   <button onclick="generateLink()">Gerar Link</button>
 
