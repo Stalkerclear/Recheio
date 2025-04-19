@@ -1,47 +1,24 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Modo Hacker</title>
+  <title>Link Tracker</title>
   <style>
-    body {
-      background-color: #000;
-      color: #0f0;
-      font-family: monospace;
-      padding: 20px;
-    }
-    input, button {
-      padding: 10px;
-      margin: 10px 0;
-      width: 100%;
-      max-width: 400px;
-      font-size: 16px;
-    }
-    #result, #dataTable {
-      margin-top: 20px;
-      background: #111;
-      padding: 10px;
-      border: 1px solid #0f0;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      border: 1px solid #0f0;
-      padding: 5px;
-      text-align: left;
-    }
+    body { background: black; color: lime; font-family: monospace; padding: 20px; }
+    input, button { padding: 5px; font-size: 16px; }
+    #link { margin-top: 20px; }
+    table { margin-top: 30px; border-collapse: collapse; width: 100%; }
+    th, td { border: 1px solid lime; padding: 5px; }
+    button.copy-btn { background: lime; color: black; border: none; cursor: pointer; }
   </style>
 </head>
 <body>
   <h1>Modo Hacker</h1>
-  <input type="text" id="url" placeholder="Cole o link aqui" />
-  <button onclick="generateLink()">Gerar link rastreado</button>
-  <div id="result" style="display:none;"></div>
-  <div id="dataTable" style="display:none;"></div>
+  <input type="text" id="dest" placeholder="Cole aqui o destino final" size="50">
+  <button onclick="generate()">Gerar Link</button>
+  <div id="link"></div>
+  <div id="panel"></div>
   <script src="script.js"></script>
 </body>
 </html>
