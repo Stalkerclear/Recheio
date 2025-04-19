@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tracker Simples</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      margin: 2rem;
+    }
+    input, button {
+      padding: 0.5rem;
+      margin: 0.5rem 0;
+      width: 100%;
+      max-width: 400px;
+    }
+    #output {
+      margin-top: 2rem;
+      padding: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      background: #f9f9f9;
+    }
+    pre {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gerador de Link Rastreador</h1>
+  <input type="text" id="dest" placeholder="Insira a URL de destino">
+  <button onclick="generateLink()">Gerar Link</button>
+
+  <p><strong>Link gerado:</strong> <span id="link"></span></p>
+
+  <div id="output" style="display:none;">
+    <h2>Último Clique</h2>
+    <pre id="dataDisplay"></pre>
+    <button onclick="copyAndClear()">Copiar Dados e Apagar</button>
+  </div>
+
+  <script src="/script.js"></script>
+</body>
+</html>
