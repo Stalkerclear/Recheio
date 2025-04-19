@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "rewrites": [
+    { "source": "/go/:id", "destination": "/server.js" },
+    { "source": "/data", "destination": "/server.js" },
+    { "source": "/clear", "destination": "/server.js" }
+  ]
+}
