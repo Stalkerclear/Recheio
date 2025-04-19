@@ -1,76 +1,47 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <title>Hacker Link Generator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Modo Hacker</title>
   <style>
     body {
-      font-family: 'Courier New', Courier, monospace;
-      background: #000;
-      color: #00ff00;
-      padding: 2rem;
+      background-color: #000;
+      color: #0f0;
+      font-family: monospace;
+      padding: 20px;
     }
     input, button {
-      background: #111;
-      color: #00ff00;
-      border: 1px solid #00ff00;
-      padding: 0.5rem;
-      margin-bottom: 1rem;
+      padding: 10px;
+      margin: 10px 0;
       width: 100%;
       max-width: 400px;
+      font-size: 16px;
     }
-    button:hover {
-      background: #00ff00;
-      color: #000;
-    }
-    #output {
-      margin-top: 2rem;
+    #result, #dataTable {
+      margin-top: 20px;
       background: #111;
-      padding: 1rem;
-      border-radius: 5px;
+      padding: 10px;
+      border: 1px solid #0f0;
     }
-    .hidden { display: none; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    th, td {
+      border: 1px solid #0f0;
+      padding: 5px;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
-  <h1>Gerador Hacker de Links</h1>
-  <label>Insira o link de destino:</label><br>
-  <input type="text" id="dest" placeholder="https://exemplo.com"><br>
-  <button onclick="gerar()">Gerar Link</button>
-
-  <div id="output" class="hidden">
-    <h2>Link Gerado:</h2>
-    <a href="#" id="shortlink" target="_blank"></a><br><br>
-    <button onclick="copiar()">Copiar e apagar</button>
-  </div>
-
-  <script>
-    async function gerar() {
-      const dest = document.getElementById('dest').value;
-      if (!dest) return alert('Insira um link.');
-
-      const res = await fetch('/save', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ dest })
-      });
-
-      const data = await res.json();
-      const link = window.location.origin + data.short;
-      document.getElementById('shortlink').href = link;
-      document.getElementById('shortlink').textContent = link;
-      document.getElementById('output').classList.remove('hidden');
-    }
-
-    function copiar() {
-      const text = document.getElementById('shortlink').textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        alert('Copiado e apagado!');
-        document.getElementById('output').classList.add('hidden');
-        document.getElementById('shortlink').textContent = '';
-      });
-    }
-  </script>
+  <h1>Modo Hacker</h1>
+  <input type="text" id="url" placeholder="Cole o link aqui" />
+  <button onclick="generateLink()">Gerar link rastreado</button>
+  <div id="result" style="display:none;"></div>
+  <div id="dataTable" style="display:none;"></div>
+  <script src="script.js"></script>
 </body>
 </html>
